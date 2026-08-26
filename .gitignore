@@ -1,0 +1,26 @@
+# Dependencies / build output (each app also has its own .gitignore)
+node_modules/
+dist/
+dist-ssr/
+build/
+.dart_tool/
+.flutter-plugins-dependencies
+
+# Env files / secrets
+.env
+.env.*
+!.env.example
+
+# Editor / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+*.log
+
+# Claude Code local settings
+.claude/
+
+# Not part of the app - kept local only
+crdntl.txt
+gr11-2027.xlsx

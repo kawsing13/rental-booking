@@ -1,0 +1,533 @@
+/* Single source of truth for the app's light-blue theme, in both light and
+   dark variants. Every component should reference these variables instead
+   of hard-coding colors, so both palettes only ever need to change in one
+   place. Mirrored in the Flutter app's lib/theme/app_theme.dart (AppTheme.light
+   / AppTheme.dark) so web and mobile look like one product in either mode.
+
+   Resolution order (last one wins):
+   1. `:root` below - the light palette, always the fallback.
+   2. OS preference (`prefers-color-scheme: dark`) - applied automatically
+      unless the user has explicitly picked light via the toggle.
+   3. `[data-theme="dark"]` / `[data-theme="light"]` on <html> - set by
+      ThemeContext when the user clicks the toggle, and persisted to
+      localStorage so it survives a refresh. */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --color-primary: #2f86d6;
+  --color-primary-dark: #1d5fa3;
+  --color-primary-light: #eaf4fc;
+  --color-accent: #5fb3e8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f4f9fd;
+  --color-bg: #f4f9fd;
+  --color-text: #1e2a38;
+  --color-text-muted: #5b6b7c;
+  --color-border: #d6e8f7;
+  --color-success: #2fa84f;
+  --color-success-bg: #e6f7ea;
+  --color-warning: #e0a100;
+  --color-warning-bg: #fdf3d9;
+  --color-danger: #d64545;
+  --color-danger-bg: #fbe7e7;
+  --color-purple: #6b3fa0;
+  --color-purple-bg: #f1e8fb;
+  --color-teal: #0f7a70;
+  --color-teal-bg: #e2f7f5;
+  --color-muted-status: #5b6b7c;
+  --color-muted-status-bg: #eceff2;
+
+  --gradient-primary: linear-gradient(135deg, #3a91dd 0%, #1d5fa3 100%);
+  --gradient-hero: linear-gradient(120deg, #eaf4fc 0%, #dcecfb 45%, #cfe6fa 100%);
+  --gradient-accent: linear-gradient(135deg, #5fb3e8 0%, #2f86d6 100%);
+  --color-brand-green: #3fb751;
+  --gradient-brand: linear-gradient(135deg, #2f86d6 0%, #3fb751 100%);
+  --skeleton-base: #e6eff8;
+  --skeleton-shine: #f2f8fd;
+  --navbar-bg: rgba(255, 255, 255, 0.85);
+  --scrim: rgba(15, 23, 32, 0.5);
+
+  --radius-sm: 8px;
+  --radius: 12px;
+  --radius-lg: 18px;
+  --shadow-sm: 0 1px 3px rgba(23, 43, 66, 0.07);
+  --shadow-md: 0 6px 20px rgba(23, 43, 66, 0.09);
+  --shadow-lg: 0 16px 40px rgba(23, 43, 66, 0.14);
+  --shadow-glow: 0 0 0 4px rgba(47, 134, 214, 0.12);
+  --font-sans: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+
+  color-scheme: light;
+}
+
+/* --- Dark palette --------------------------------------------------------
+   Two selectors carry identical values on purpose: the media-query block
+   makes the OS "dark" setting work with zero clicks, and the attribute
+   block lets the in-app toggle override that (in either direction) once the
+   user has expressed a preference. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --color-primary: #4f9de3;
+    --color-primary-dark: #8cc4ef;
+    --color-primary-light: #16324a;
+    --color-accent: #6cc0ef;
+    --color-surface: #16212e;
+    --color-surface-alt: #1c2938;
+    --color-bg: #0f1720;
+    --color-text: #e7edf4;
+    --color-text-muted: #93a5b8;
+    --color-border: #2a3b4d;
+    --color-success: #4bc178;
+    --color-success-bg: #16332580;
+    --color-warning: #f0b429;
+    --color-warning-bg: #3a2f1180;
+    --color-danger: #f0716a;
+    --color-danger-bg: #3a1d1d80;
+    --color-purple: #b18aef;
+    --color-purple-bg: #2a2143;
+    --color-teal: #4fd6c4;
+    --color-teal-bg: #123531;
+    --color-muted-status: #a7b6c6;
+    --color-muted-status-bg: #26333f;
+
+    --gradient-primary: linear-gradient(135deg, #4f9de3 0%, #2f6fb0 100%);
+    --gradient-hero: linear-gradient(120deg, #16212e 0%, #14202c 45%, #122335 100%);
+    --gradient-accent: linear-gradient(135deg, #6cc0ef 0%, #3a7fc4 100%);
+    --color-brand-green: #4fd166;
+    --gradient-brand: linear-gradient(135deg, #4f9de3 0%, #4fd166 100%);
+    --skeleton-base: #1c2938;
+    --skeleton-shine: #253a4e;
+    --navbar-bg: rgba(15, 23, 32, 0.8);
+    --scrim: rgba(0, 0, 0, 0.6);
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+    --shadow-glow: 0 0 0 4px rgba(79, 157, 227, 0.25);
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --color-primary: #4f9de3;
+  --color-primary-dark: #8cc4ef;
+  --color-primary-light: #16324a;
+  --color-accent: #6cc0ef;
+  --color-surface: #16212e;
+  --color-surface-alt: #1c2938;
+  --color-bg: #0f1720;
+  --color-text: #e7edf4;
+  --color-text-muted: #93a5b8;
+  --color-border: #2a3b4d;
+  --color-success: #4bc178;
+  --color-success-bg: #16332580;
+  --color-warning: #f0b429;
+  --color-warning-bg: #3a2f1180;
+  --color-danger: #f0716a;
+  --color-danger-bg: #3a1d1d80;
+  --color-purple: #b18aef;
+  --color-purple-bg: #2a2143;
+  --color-teal: #4fd6c4;
+  --color-teal-bg: #123531;
+  --color-muted-status: #a7b6c6;
+  --color-muted-status-bg: #26333f;
+
+  --gradient-primary: linear-gradient(135deg, #4f9de3 0%, #2f6fb0 100%);
+  --gradient-hero: linear-gradient(120deg, #16212e 0%, #14202c 45%, #122335 100%);
+  --gradient-accent: linear-gradient(135deg, #6cc0ef 0%, #3a7fc4 100%);
+  --color-brand-green: #4fd166;
+  --gradient-brand: linear-gradient(135deg, #4f9de3 0%, #4fd166 100%);
+  --skeleton-base: #1c2938;
+  --skeleton-shine: #253a4e;
+  --navbar-bg: rgba(15, 23, 32, 0.8);
+  --scrim: rgba(0, 0, 0, 0.6);
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 0 4px rgba(79, 157, 227, 0.25);
+
+  color-scheme: dark;
+}
+
+/* :root[data-theme="light"] needs no block of its own - it's just the bare
+   :root values from the top of this file, explicitly re-selected so it wins
+   over the prefers-color-scheme block above when the user picks light while
+   their OS is in dark mode. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease);
+}
+
+a {
+  color: var(--color-primary-dark);
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+/* Subtle scrollbar so it doesn't clash with the light theme */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+/* The nav link row scrolls horizontally on narrower desktop widths before
+   the hamburger breakpoint kicks in - the default 10px scrollbar there
+   reads as chunky against a 64px-tall bar, so it gets its own thinner one. */
+.navbar-links {
+  scrollbar-width: thin; /* Firefox */
+}
+.navbar-links::-webkit-scrollbar {
+  height: 4px;
+}
+.navbar-links::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 999px;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-in {
+  animation: fadeInUp 0.35s var(--ease) both;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -300px 0;
+  }
+  100% {
+    background-position: 300px 0;
+  }
+}
+.skeleton {
+  border-radius: var(--radius);
+  background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-shine) 37%, var(--skeleton-base) 63%);
+  background-size: 600px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  padding: 22px;
+  transition: background 0.2s var(--ease), box-shadow 0.2s var(--ease), transform 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  transition: background 0.18s var(--ease), transform 0.08s var(--ease), box-shadow 0.18s var(--ease),
+    filter 0.18s var(--ease);
+}
+.btn:active:not(:disabled) {
+  transform: translateY(1px) scale(0.99);
+}
+.btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(29, 95, 163, 0.28);
+}
+.btn-primary:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow: 0 4px 16px rgba(29, 95, 163, 0.36);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--color-primary);
+  color: var(--color-primary-dark);
+}
+.btn-outline:hover:not(:disabled) {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary-dark);
+}
+
+.btn-danger {
+  background: var(--color-danger);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(214, 69, 69, 0.25);
+}
+.btn-danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 7px;
+}
+
+.form-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease), background 0.2s var(--ease);
+}
+/* Dark mode: browsers render the native date-picker/dropdown icons in black
+   by default, which disappear against a dark input background. */
+:root[data-theme='dark'] input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+  }
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-glow);
+}
+input:hover:not(:focus),
+select:hover:not(:focus) {
+  border-color: var(--color-accent);
+}
+
+.error-text {
+  color: var(--color-danger);
+  font-size: 13px;
+}
+
+.page-title {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.page-subtitle {
+  color: var(--color-text-muted);
+  margin-bottom: 24px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+}
+.badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+th,
+td {
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 14px;
+}
+th {
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+tbody tr {
+  transition: background 0.12s var(--ease);
+}
+tbody tr:hover {
+  background: var(--color-primary-light);
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+.grid-cols-3 {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* Icon circle used for category art (catalog cards, item detail) and stat
+   card icons on the admin dashboard - one reusable "pretty placeholder"
+   instead of hand-rolled inline styles scattered across components. */
+.icon-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--gradient-accent);
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 48px 20px;
+  color: var(--color-text-muted);
+}
+.empty-state .icon-circle {
+  margin: 0 auto 16px;
+  opacity: 0.9;
+}
+
+/* Brand mark (logo) - same shape as .icon-circle but always uses the blue
+   -> green brand gradient regardless of category/status, so the logo stays
+   recognizable no matter what an .icon-circle elsewhere is showing. */
+.brand-mark {
+  background: var(--gradient-brand) !important;
+}
+
+/* Wraps any wide table (admin lists, calendars) so it scrolls horizontally
+   on narrow screens instead of blowing out the page layout or squashing
+   columns unreadably - the table/grid itself is untouched. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Responsive breakpoints                                                  */
+/* ---------------------------------------------------------------------- */
+
+/* Tablet and down: tighten spacing, shrink the hero/page headings a step. */
+@media (max-width: 860px) {
+  .container {
+    padding: 0 16px;
+  }
+  .page-title {
+    font-size: 22px;
+  }
+  .card {
+    padding: 18px;
+  }
+}
+
+/* Phone-width: the desktop nav (.navbar-links) gives way to a hamburger
+   button (.navbar-toggle) that opens a stacked mobile menu
+   (.navbar-mobile-menu). Both toggle/menu are hidden above this breakpoint
+   so desktop never sees them, and the reverse below it - see Navbar.jsx. */
+@media (max-width: 760px) {
+  .navbar-links {
+    display: none !important;
+  }
+  .navbar-toggle {
+    display: inline-flex !important;
+  }
+  .navbar-name {
+    display: none !important;
+  }
+}
+@media (min-width: 761px) {
+  .navbar-mobile-menu {
+    display: none !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .page-title {
+    font-size: 20px;
+  }
+  .grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+  table {
+    font-size: 13px;
+  }
+  th,
+  td {
+    padding: 9px 10px;
+  }
+}

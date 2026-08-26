@@ -1,0 +1,22 @@
+'use strict';
+
+const { v4: uuidv4 } = require('uuid');
+
+// Seeds the three categories the original spec ships with. Admins can add
+// more afterward via POST /api/categories - this just makes sure the
+// pre-existing item data (seeded with category slugs 'chair'/'table'/
+// 'karaoke') has matching category records to show up in the UI's filters.
+module.exports = {
+  up: async (queryInterface) => {
+    const now = new Date();
+    await queryInterface.bulkInsert('categories', [
+      { id: uuidv4(), slug: 'chair', label: 'Chairs', icon: 'chair', created_at: now, updated_at: now },
+      { id: uuidv4(), slug: 'table', label: 'Tables', icon: 'table', created_at: now, updated_at: now },
+      { id: uuidv4(), slug: 'karaoke', label: 'Karaoke Sets', icon: 'karaoke', created_at: now, updated_at: now },
+    ]);
+  },
+
+  down: async (queryInterface) => {
+    await queryInterface.bulkDelete('categories', { slug: ['chair', 'table', 'karaoke'] });
+  },
+};

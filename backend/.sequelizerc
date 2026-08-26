@@ -1,0 +1,10 @@
+// Tells sequelize-cli where our db folders live (we keep everything under src/db
+// instead of the default top-level /config, /models, /migrations, /seeders).
+const path = require('path');
+
+module.exports = {
+  config: path.resolve('src/config', 'database.js'),
+  'models-path': path.resolve('src/db', 'models'),
+  'migrations-path': path.resolve('src/db', 'migrations'),
+  'seeders-path': path.resolve('src/db', 'seeders'),
+};
