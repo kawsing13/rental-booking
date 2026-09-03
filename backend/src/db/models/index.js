@@ -11,12 +11,11 @@ const basename = path.basename(__filename);
 const env = process.env.NODE_ENV || 'development';
 const config = require('../../config/database.js')[env];
 
-const sequelize = new Sequelize(
-  config.database,
-  config.username,
-  config.password,
-  config
-);
+// See config/database.js - hosted Postgres in production connects via a
+// single DATABASE_URL rather than discrete host/user/password fields.
+const sequelize = config.use_env_variable
+  ? new Sequelize(process.env[config.use_env_variable], config)
+  : new Sequelize(config.database, config.username, config.password, config);
 
 const db = {};
 

@@ -16,8 +16,16 @@ const base = {
 module.exports = {
   development: { ...base },
   test: { ...base, database: `${base.database}_test` },
+  // Hosted Postgres providers (Render, Neon, Supabase, Railway, ...) hand
+  // you one connection string rather than separate host/user/password
+  // fields. `use_env_variable` is sequelize-cli's built-in convention for
+  // that - when set, both the CLI and src/db/models/index.js connect via
+  // `new Sequelize(process.env[use_env_variable], config)` instead of the
+  // discrete fields above. Falls back to DB_HOST etc. (and eventually
+  // localhost) so this file still works unchanged for local dev.
   production: {
     ...base,
+    use_env_variable: process.env.DATABASE_URL ? 'DATABASE_URL' : undefined,
     dialectOptions: {
       ssl: { require: true, rejectUnauthorized: false },
     },
