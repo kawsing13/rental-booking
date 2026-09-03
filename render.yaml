@@ -1,13 +1,9 @@
 # Render "Blueprint" - importing this repo on Render (New + > Blueprint)
-# auto-provisions the Postgres database and the API web service together,
-# wires DATABASE_URL between them, and generates the JWT secrets. See
-# README.md's Deployment section for the exact click-through steps and what
-# still needs to be set by hand (CLIENT_ORIGIN, once the frontend has a URL).
-databases:
-  - name: rental-booking-db
-    plan: free
-    postgresMajorVersion: 16
-
+# provisions the API web service. The database is Neon (not Render's own
+# Postgres addon) - create a Neon project yourself first and paste its
+# connection string into DATABASE_URL below (marked `sync: false`, so
+# Render prompts for it during setup rather than trying to provision one).
+# See README.md's Deployment section for the exact click-through steps.
 services:
   - type: web
     name: rental-booking-backend
@@ -19,10 +15,11 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      # Paste your Neon connection string here (Neon dashboard > Connection
+      # Details > Connection string). Keep `?sslmode=require` if Neon
+      # includes it - our pg config also forces SSL either way.
       - key: DATABASE_URL
-        fromDatabase:
-          name: rental-booking-db
-          property: connectionString
+        sync: false
       - key: JWT_ACCESS_SECRET
         generateValue: true
       - key: JWT_REFRESH_SECRET

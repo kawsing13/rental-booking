@@ -99,34 +99,41 @@ The app targets the same backend API described in `API_CONTRACT.md`.
 
 ## Deployment
 
-Vercel hosts the frontend well but isn't a fit for a stateful Express + Postgres API, so the two
-deploy to different places: **frontend → Vercel**, **backend → Render** (its free tier includes
-Postgres, and `render.yaml` at the repo root auto-provisions both together). Both platforms deploy
+Three platforms, each doing the piece it's best at: **frontend → Vercel**, **backend → Render**,
+**database → Neon** (serverless Postgres - more generous free tier than Render's own Postgres addon,
+which is why the database lives separately rather than in Render's Blueprint). All three deploy
 straight from the `kawsing13/rental-booking` GitHub repo - no local build/upload needed. Do these in
-order, since the frontend needs the backend's URL and the backend needs the frontend's URL:
+order, since later steps need URLs/connection strings from earlier ones:
 
-**1. Backend on Render**
+**1. Database on Neon**
+1. [neon.tech](https://neon.tech) → sign in → **New Project** (any name/region; Postgres 16 to match
+   what this app was built against, though Neon's default is fine too).
+2. On the project dashboard, copy the **Connection string** (Neon dashboard → Connection Details).
+   It looks like `postgresql://<user>:<password>@<host>/<db>?sslmode=require`.
+
+**2. Backend on Render**
 1. [render.com](https://render.com) → sign in with GitHub → **New +** → **Blueprint** → pick this repo.
-   Render reads `render.yaml` and provisions the `rental-booking-db` Postgres instance and the
-   `rental-booking-backend` web service together, generating the JWT secrets automatically.
+   Render reads `render.yaml` and sets up the `rental-booking-backend` web service, generating the
+   JWT secrets automatically. When it asks for `DATABASE_URL` (listed as `sync: false`, so Render
+   prompts for it), paste the Neon connection string from step 1.2.
 2. Once it's deployed, copy the service's URL (`https://rental-booking-backend-xxxx.onrender.com`).
 3. Open a Shell on the web service (Render dashboard → the service → **Shell**) and run
    `npm run seed` once, to load the demo admin/customer accounts and starter catalog
-   (`npm run migrate` already ran automatically as part of the build).
+   (`npm run migrate` already ran automatically as part of the build, against the Neon database).
 
-**2. Frontend on Vercel**
+**3. Frontend on Vercel**
 1. [vercel.com](https://vercel.com) → sign in with GitHub → **Add New** → **Project** → pick this repo.
 2. Set **Root Directory** to `frontend` (Vercel auto-detects the Vite framework preset from there).
-3. Add an environment variable `VITE_API_URL` = `https://<your-render-backend-url>/api` (from step 1.2).
+3. Add an environment variable `VITE_API_URL` = `https://<your-render-backend-url>/api` (from step 2.2).
 4. Deploy. Copy the resulting `https://<your-project>.vercel.app` URL.
 
-**3. Connect them**
+**4. Connect frontend back to backend**
 Back on Render, open the backend service → **Environment** → set `CLIENT_ORIGIN` to the Vercel URL
-from step 2.4 (no trailing slash) → save (this redeploys the service). CORS blocks the browser from
+from step 3.4 (no trailing slash) → save (this redeploys the service). CORS blocks the browser from
 calling the API until this matches exactly.
 
-Once both are set, the Vercel URL is a fully working deployment - login with the seeded demo accounts
-from step 1.3, or register a new one.
+Once all four are set, the Vercel URL is a fully working deployment - login with the seeded demo
+accounts from step 2.3, or register a new one.
 
 A redeploy on either platform happens automatically on every push to `master`, matching how the
 service was created. GCash/Maya stay in mock mode in production too (see "Notes on payments" above)
