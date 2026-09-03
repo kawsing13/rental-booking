@@ -7,6 +7,14 @@ const { v4: uuidv4 } = require('uuid');
 // immediately after `npm run migrate && npm run seed`.
 module.exports = {
   up: async (queryInterface) => {
+    // Idempotent on purpose - this runs on every deploy now (render.yaml's
+    // buildCommand), not as a manual one-off, so re-running it must not
+    // hit the unique constraint on `email` and fail the build.
+    const [existing] = await queryInterface.sequelize.query(
+      "SELECT COUNT(*)::int AS count FROM users WHERE email = 'admin@rentalapp.test'"
+    );
+    if (existing[0].count > 0) return;
+
     const now = new Date();
     const adminId = uuidv4();
     const customerId = uuidv4();

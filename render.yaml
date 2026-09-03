@@ -10,7 +10,9 @@ services:
     runtime: node
     plan: free
     rootDir: backend
-    buildCommand: npm install && npm run migrate
+    # Seeders are idempotent (see src/db/seeders) so running seed on every
+    # deploy is safe - no manual shell step needed to load the demo data.
+    buildCommand: npm install && npm run migrate && npm run seed
     startCommand: npm start
     envVars:
       - key: NODE_ENV
